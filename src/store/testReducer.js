@@ -1,8 +1,9 @@
 
+const defaultState = {
+  count: 0
+}
 
-let count = 0
-
-function testReducer(state = count, action) {
+function testReducer(state = defaultState, action) {
   return state
 }
 

@@ -11,7 +11,6 @@ export function inputChangeAction(value) {
   return action
 }
 
-
 export function addItemAction() {
   const action = {
     type: ADD_ITEM
@@ -42,7 +41,10 @@ export function initListAction(list) {
 export function getList() {
   return function (dispatch) {
     axios.get('http://mock-api.com/wnapNXg1.mock/list').then(res => {
-      dispatch(initListAction(res.data))
+      const action = initListAction(res.data)
+      dispatch(action)
     })
   }
 }
+
+

@@ -1,2 +1,1 @@
-# todolist
-练习React、Redux及其中间件的使用
+练习react、redux、以及其中间件的使用流程，巩固记忆

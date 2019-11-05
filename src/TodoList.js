@@ -1,48 +1,24 @@
 import React from 'react'
-import store from './store/index'
+import { connect } from 'react-redux'
 import { inputChangeAction, addItemAction, deleteItemAction, getList } from './store/actionCreators'
-import axios from 'axios'
+
 
 class TodoList extends React.Component {
 
-  // http://mock-api.com/wnapNXg1.mock/list
-  constructor(props) {
-    super(props)
-    this.state = store.getState().todoReducer
-    this.handleInputChange = this.handleInputChange.bind(this)
-    this.handleBtnClick = this.handleBtnClick.bind(this)
-    this.handleBtnDelete = this.handleBtnDelete.bind(this) 
-    store.subscribe(() => this.setState(store.getState().todoReducer))
-  }
-
-
   componentDidMount() {
-    const action = getList()
-    store.dispatch(action)
+    this.props.getInitList()
   }
-
-  handleBtnClick() {
-    store.dispatch(addItemAction())
-  }
-
-  handleInputChange(e) {
-    const value = e.target.value
-    store.dispatch(inputChangeAction(value))
-  }
-
-  handleBtnDelete(index) {
-    store.dispatch(deleteItemAction(index))
-  }
-
 
   render() {
+    const { inputValue, list, inputChange, addItem, deleteItem } = this.props
+
     return (
       <div className="container">
-        <input type="text" value={this.state.inputValue} onChange={this.handleInputChange}/>
-        <button onClick={this.handleBtnClick}>提交</button>
+        <input type="text" value={inputValue} onChange={inputChange} />
+        <button onClick={addItem}>提交</button>
         <ul>
           {
-            this.state.list.map((item, index) => <li key={index} onClick={() => this.handleBtnDelete(index)}>{item}</li>)
+            list.map((item, index) => <li key={index} onClick={() => deleteItem(index)}>{item}</li>)
           }
         </ul>
       </div>
@@ -51,9 +27,32 @@ class TodoList extends React.Component {
 
 }
 
+function mapStateToProps(state) {
+  return {
+    inputValue: state.todoReducer.inputValue,
+    list: state.todoReducer.list
+  }
+}
 
+function mapDispatchToProps(dispatch) {
+  return {
+    inputChange(e) {
+      const action = inputChangeAction(e.target.value)
+      dispatch(action)
+    },
+    addItem() {
+      const action = addItemAction()
+      dispatch(action)
+    },
+    deleteItem(index) {
+      const action = deleteItemAction(index)
+      dispatch(action)
+    },
+    getInitList() {
+      const action = getList()
+      dispatch(action)
+    }
+  }
+}
 
-
-
-
-export default TodoList
+export default connect(mapStateToProps, mapDispatchToProps)(TodoList)
